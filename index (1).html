@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>فكّي الحبل 🪢</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#fdecef;--card:#fff;--ink:#5a2a3a;--soft:#8a5a6c;--rope:#c94a6e;--knot:#d98aa5;--on:#fff;--sb:#f8d3de;--line:#efc3d1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Cairo","Segoe UI",Tahoma,sans-serif;line-height:1.9;font-size:18px}
+main{max-width:620px;margin:0 auto;padding:20px 16px 48px}
+h1{font-family:"Reem Kufi","Cairo",sans-serif;font-size:36px;margin:8px 0 4px;text-align:center}
+.sub{text-align:center;color:var(--soft);margin:0 0 18px;font-size:16px}
+.rope{display:flex;justify-content:center;align-items:center;margin:0 0 18px}
+.rope i{display:block;width:30px;height:30px;border-radius:50%;border:4px solid var(--knot);background:var(--knot);transition:all .5s}
+.rope i.done{background:transparent;border-style:dashed;border-color:var(--rope)}
+.rope i.now{box-shadow:0 0 0 4px var(--line)}
+.rope b{display:block;width:18px;height:4px;background:var(--knot)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;border-top:6px solid var(--rope);padding:20px}
+.tag{color:var(--rope);font-weight:700;margin:0 0 6px}
+.q{margin:0 0 16px;font-size:19px}
+button{font:inherit;cursor:pointer}
+.opt{display:block;width:100%;text-align:right;background:transparent;color:var(--ink);border:2px solid var(--line);border-radius:14px;padding:12px 14px;margin:0 0 10px;transition:border-color .2s,background .2s}
+.opt:hover,.opt:focus-visible{border-color:var(--rope);outline:none}
+.opt.picked{border-color:var(--rope);background:var(--sb)}
+.opt:disabled:not(.picked){opacity:.45;cursor:default}
+.fb{border-right:5px solid var(--rope);padding:4px 14px;margin:14px 0;background:var(--sb);border-radius:8px}
+.fb p{margin:6px 0}
+.step{color:var(--soft);font-size:16px}
+.go{background:var(--rope);color:var(--on);border:0;border-radius:14px;padding:12px 22px;font-weight:700;margin-top:6px}
+.go:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.res{border:2px solid var(--rope);border-radius:14px;padding:6px 16px 10px;margin:0 0 14px}
+.res h3{margin:8px 0 2px;font-size:20px}
+.res p{margin:4px 0}
+.note{color:var(--soft);font-size:15px}
+textarea{width:100%;font:inherit;background:transparent;color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:10px;min-height:78px;margin:6px 0 14px}
+.verse{text-align:center;color:var(--soft);margin-top:22px;font-size:17px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<h1>فكّي الحبل 🪢</h1>
+<p class="sub">مفيش إجابة صح أو غلط. اختاري اللي أقرب لِما بتعمليه فعلًا.</p>
+<div class="rope" id="rope" aria-hidden="true"></div>
+<section class="card" id="stage"></section>
+</main>
+<script>
+// الاختيار: [النص, التعليق, الخطوة, النوع]  — الأنواع: rej رفض، cmp مقارنة، ang غضب، pro تأجيل، ple إرضاء، free حرية
+var S=[
+{q:"اقترحتي فكرة في الخدمة، ومحدش رد عليها.",o:[
+["أقول في نفسي: كان أحسن ما أتكلمش، وما أتكلمش تاني.","السكوت ساعات بيحمينا من الإحراج، بس ممكن نخسر صوتنا. اسألي نفسك: ده راحة ولا خوف؟","خطوة: قولي فكرتك بعدين لواحدة تثقي فيها.","rej"],
+["أتضايق وأرد بحدة وأصرّ إن فكرتي أحسن.","ده بيدل إنك عايزة تتسمعي، وده حقك. بس ساعات الوجع من الرفض بيطلع حدة.","خطوة: خدي نفس وافتكري إن رأيك ليه قيمة حتى لو ما اتقبلش دلوقتي.","ang"],
+["أستغرب شوية، وبعدين أكلم المسؤولة وأشرحلها فكرتي.","جميل. اتكلمتي من غير ما رد فعلهم يحدد قيمتك.","خطوة: كملي كده، وسيبي النتيجة لربنا.","free"]]},
+{q:"شوفتي صورة صاحبتك على السوشيال: نجحت وسافرت وكل حاجة عندها حلوة.",o:[
+["أبارك لها بصدق، وأفكر أنا محتاجة أشتغل على إيه.","ده نضج. الفرح للناس بيحررنا من الغيرة.","خطوة: اكتبي 3 حاجات ربنا أعطاهالك.","free"],
+["أفضل أقارن نفسي بيها وأحس إني متأخرة.","بنشوف من غيرنا أحسن لحظاتهم بس، وما بنشوفش تعبهم.","خطوة: حددي وقت قليل للسوشيال كل يوم.","cmp"],
+["أنزل أنا كمان حاجة عشان الناس تشوف إني كويسة.","طبيعي نحب الناس تشوفنا، بس لما نعمل حاجة عشان نتقبل بنبقى مربوطين بنظرتهم.","خطوة: اسألي نفسك: لو محدش هيشوف، كنت هعملها؟","rej"]]},
+{q:"واحدة قالت كلمة جارحة عليكي قدام الناس.",o:[
+["أرد فورًا بكلمة أجرحها بيها.","الغضب بيدّي راحة مؤقتة وبعدين ندم. ده مش معناه إنك وحشة، معناه إنك اتجرحتي.","خطوة: قبل ما تردي خدي نفس وقولي صلاة قصيرة.","ang"],
+["أبتسم وأعمل إن مفيش حاجة عشان محدش يزعل، وأتضايق جوايا.","الكتمان بيسيب جرح جوه. مش لازم نصارخ، لكن لازم نعبّر بهدوء.","خطوة: قوليلها بعد ما تهدي: «كلامك ضايقني».","ple"],
+["أبعد شوية، وأصلي، وبعدين أكلمها.","ده توازن حلو، لأنك أخدتي وقت تهدي فيه قبل ما تتكلمي.","خطوة: اسألي نفسك: إيه اللي وجعني بجد؟","free"]]},
+{q:"عندك حاجة مهمة، وفتحتي الموبايل «خمس دقايق» وبقى لك ساعتين.",o:[
+["أقول: بكرة أعوّض.","«بكرة» بتتكرر ويكبر الحمل. وده مش كسل في أغلب الأحيان، ساعات بنهرب من حاجة تقيلة.","خطوة: ابدئي بخمس دقايق بس من المهم.","pro"],
+["أقول: مش وقته دلوقتي، هبدأ لما أبقى متحمسة.","ساعات بنستنى الحماس عشان نبدأ، لكن الحماس غالبًا بييجي بعد ما نبدأ.","خطوة: ابدئي بأصغر خطوة حتى من غير حماس.","pro"],
+["أقفل الموبايل وأبدأ بأصغر خطوة في اللي مهم.","رجوع بسيط من غير دراما، وده هو التغيير الحقيقي.","خطوة: ضعي الموبايل بعيد وقت التركيز.","free"]]},
+{q:"صاحبتك طلبت منك خدمة وانتي مرهقة.",o:[
+["أقولها: مش هقدر النهاردة، بس ممكن بعدين.","ده توازن بين المحبة والحدود. «لا» بلطف مش قلة ذوق.","خطوة: حدودك مش ضد حد، دي حماية لقلبك.","free"],
+["أقول حاضر وأنا مرهقة عشان ما تزعلش.","الحب الحقيقي بيبقى بفرح، مش بضغط. وإزاي تساعدي وانتي تعبانة؟","خطوة: جربي تقولي «مش هقدر دلوقتي».","ple"],
+["أتجاهل رسالتها وما أردش عشان ما أضطرش أقول لا.","التجاهل بيريحنا من الموقف المحرج، بس بيسيب الموضوع معلق ويزوّد التوتر.","خطوة: ردي بجملة بسيطة بدل ما تهربي: «مش هقدر دلوقتي».","rej"]]},
+{q:"غلطتي في حاجة قدام الناس.",o:[
+["أتكسف وأتجنب الناس، وأقول إن غيري مش بيغلطوا زيي.","الإحراج مؤلم، بس الغلط ما بيغيّرش قيمتك. وغيرك بيغلط كمان.","خطوة: قولي لنفسك: غلطت وأتعلّم، مش أنا الغلط.","cmp"],
+["أعتذر ببساطة وأكمل وأتعلم.","ده تحرر حقيقي: ما أخافش من الغلط.","خطوة: خلّي ده أسلوبك في كل غلطة صغيرة.","free"],
+["أبرر وألوم الظروف أو حد تاني.","التبرير بيحمينا من الألم، بس بيبعدنا عن التعلّم.","خطوة: جربي تقولي «أنا غلطت» ببساطة من غير جلد.","ang"]]}
+];
+var R={
+rej:{n:"الخوف من رفض الآخرين",why:"لما رأي الناس فيكي بيحدد هتتكلمي ولا تسكتي، وتبقي على طبيعتك ولا لأ، بتبقي ماسكة نفسك من جوه.",kind:"ده مش ضعف. ده خوف طبيعي إننا نتحب ونتقبل، وربنا قبلك من قبل ما تعملي أي حاجة.",tip:"جربي الأسبوع ده تقولي رأيك في موقف صغير، وسيبي رد فعل الناس لربنا."},
+cmp:{n:"المقارنة بالآخرين",why:"لما بتقيسي نفسك بحياة غيرك، فرحتك بتبقى متعلقة بيهم، وبتنسي اللي ربنا عمله معاكي إنتي.",kind:"بنقارن لأننا بنشوف من الناس أحلى لحظاتهم بس، ومش بنشوف تعبهم.",tip:"اكتبي كل يوم حاجة صغيرة ربنا أعطاهالك."},
+ang:{n:"الغضب",why:"لما الكلمة الجارحة هي اللي بتتحكم في ردك، فالشخص التاني هو اللي بيمسك الحبل، مش إنتي.",kind:"الغضب غالبًا بيكون وجع اتجرح جواكي.",tip:"قبل ما تردي، خدي نفس وقولي صلاة قصيرة، وبعدين قولي إيه اللي وجعك بهدوء."},
+pro:{n:"التأجيل والعادات",why:"لما بتحسي إنك بتعملي حاجة غير اللي نفسك تعمليها، وده بيسرق وقتك وقربك من ربنا.",kind:"التأجيل مش كسل في أغلب الأحيان، ساعات بنهرب من حاجة تقيلة أو من خوف إننا ما نعملهاش كويس.",tip:"ابدئي بخمس دقايق بس من أهم حاجة، وحطي الموبايل بعيد وقت التركيز."},
+ple:{n:"إرضاء الناس",why:"لما بتقولي «حاضر» وانتي مش عايزة، بتتعبي ومش بتساعدي بفرح.",kind:"إنتي بتحبي الناس وعايزة تريحيهم، وده حلو. بس حبك مش لازم يبقى على حساب تعبك.",tip:"جربي «مش هقدر دلوقتي، بس ممكن بعدين»، وافتكري إن «لا» بلطف مش قلة محبة."}
+};
+var i=0,A=[],stage=document.getElementById("stage"),rope=document.getElementById("rope");
+function drawRope(){var h="";for(var k=0;k<S.length;k++){h+=(k?"<b></b>":"")+'<i class="'+(k<i?"done":k==i?"now":"")+'"></i>'}rope.innerHTML=h}
+function show(){
+drawRope();
+if(i>=S.length){return end()}
+var s=S[i],h='<p class="tag">'+(i+1)+" من "+S.length+'</p><p class="q">'+s.q+'</p><div>';
+s.o.forEach(function(o,k){h+='<button class="opt" data-k="'+k+'">'+o[0]+'</button>'});
+h+='</div><div id="fb"></div>';
+stage.innerHTML=h;
+stage.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){pick(+b.dataset.k)}});
+}
+function pick(k){
+var o=S[i].o[k];A[i]=o[3];
+stage.querySelectorAll(".opt").forEach(function(b){b.disabled=true;if(+b.dataset.k===k)b.classList.add("picked")});
+document.getElementById("fb").innerHTML='<div class="fb"><p>'+o[1]+'</p><p class="step">'+o[2]+'</p></div><button class="go" id="nx">'+(i==S.length-1?"شوفي الخلاصة":"الموقف اللي بعده")+'</button>';
+document.getElementById("nx").onclick=function(){i++;show();window.scrollTo(0,0)};
+document.getElementById("nx").focus();
+}
+function end(){
+var c={rej:0,cmp:0,ang:0,pro:0,ple:0,free:0};
+A.forEach(function(t){c[t]++});
+var keys=Object.keys(R).sort(function(a,b){return c[b]-c[a]});
+var max=c[keys[0]],top=keys.filter(function(k){return c[k]===max}).slice(0,2);
+var h='<p class="tag">الخلاصة</p>';
+if(max===0){h+='<p class="q">اختياراتك كلها كانت حرة وواعية. ربنا يثبتك.</p>'}
+else{
+h+='<p class="q">'+(c.free>=4?'اختياراتك أغلبها بتدل على وعي وحرية، وده جميل. ولسه ممكن في حبل صغير يستاهل تنتبهيله:':'من اختياراتك، ده أقرب حبل ممكن يقيّد حريتك الداخلية:')+'</p>';
+top.forEach(function(k){var r=R[k];
+h+='<div class="res"><h3>'+r.n+'</h3><p><strong>ليه بيقيّد حريتك؟</strong> '+r.why+'</p><p>'+r.kind+'</p><p class="step"><strong>نصيحة صغيرة:</strong> '+r.tip+'</p></div>'});
+}
+h+='<p class="note">الخلاصة دي مش تشخيص، هي مجرد مرآة صغيرة من اختياراتك في اللعبة.</p>';
+h+='<p class="q">الحرية الحقيقية مش إني أعمل كل اللي عايزاه، لكن إني أختار الصالح بمحبة ووعي، وأبقى حرة من الخوف وضغط الناس والعادات اللي تبعدني عن ربنا.</p>';
+h+='<label for="t0">خدي دقيقة مع ربنا واكتبي: إيه الشيء اللي بيقيّد حريتي؟ وإيه أول خطوة صغيرة أبدأ بيها؟</label><textarea id="t0"></textarea>';
+h+='<button class="go" id="re">ألعب تاني</button><p class="verse">«فَإِنْ حَرَّرَكُمُ الابْنُ فَبِالْحَقِيقَةِ تَكُونُونَ أَحْرَارًا» (يوحنا 8: 36)</p>';
+stage.innerHTML=h;
+document.getElementById("re").onclick=function(){i=0;A=[];show();window.scrollTo(0,0)};
+}
+show();
+</script>
+</body>
+</html>
